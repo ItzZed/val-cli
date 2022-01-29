@@ -1,2 +1,12 @@
+# IN VERY EARLY DEVELOPMENT DO NOT USE!
+
 # val-cli
-Valorant CLI  IN DEVELOPMENT!!!!
+
+CLI that shows your valorant stats
+
+
+currently unusable, trying to get 403 error fixed.
+
+for now will take api key.
+
+
