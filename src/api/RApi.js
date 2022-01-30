@@ -9,8 +9,8 @@ import {regions} from "./regions.js";
 // wrapper(axios);
 
 
-// API Class
-export class API {
+// API Class For the Actual Riot Servers
+export class RAPI {
 
 	// Give the api key, region (check regions.js to see the right region to overwrite), and the locale, you can do a Google to find it lol.
 	constructor(apikey, region = regions.NorthAmerica, locale = "en-US") {

@@ -2,26 +2,62 @@
 
 // Imports
 import chalk from "chalk";
-import inquirer from "inquirer";
+/*import inquirer from "inquirer";
 import gradient from "gradient-string";
 import chalkAnimation from "chalk-animation";
 import figlet from "figlet";
-import { createSpinner } from "nanospinner"
+import { createSpinner } from "nanospinner"*/
 
 // Import API
 import { API } from "./api/api.js";
 
 // Api KEY HERE
-const key = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+// const key = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
 // start the api up
-const api = new API(key);
+// const api = new API(key);
+const api = new API();
+
 
 console.log(`${chalk.bgBlueBright("Welcome to VAL-CLI!")} The Most Broken CLI EVER LOL!`);
 
 try {
 
-	api.getValContent();
+	api.authorize("username", "password").then(() => {
+
+		// log auth data
+		console.log({
+			username: api.username,
+			user_id: api.user_id,
+			access_token: api.access_token,
+			entitlements_token: api.entitlements_token,
+		});
+
+		api.getPlayerInfo().then((resp) => {
+
+			console.log(resp);
+
+		});
+
+	}).catch((e) => {
+
+
+		if (e.response.status === 403) {
+
+			console.log(`${chalk.bgRed("F YOU RIOT GIVING ME 403 ERROR  GOD DAMINT")}`);
+			console.log(`${chalk.bgBlueBright("this probably means either api key is wrong or riot is fucking with me :)")}`);
+			console.log("Data: " + e.response.data);
+			console.log("Status: " + e.response.status);
+			console.log("Headers: ");
+			console.log(e.response.headers);
+
+		} else {
+
+			console.log(e);
+
+		}
+
+	});
 
 }
 catch(e) {
