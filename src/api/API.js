@@ -3,6 +3,8 @@ import { wrapper } from 'axios-cookiejar-support';
 import { CookieJar } from 'tough-cookie';
 import {regions} from "./regions.js";
 import tls from 'tls';
+import https from "https";
+
 
 wrapper(axios);
 
@@ -16,16 +18,17 @@ const gameEntitlementUrl = "https://clientconfig.rpg.riotgames.com/api/v1/config
 // const cookieJson = "{\"client_id\":
 
 // Error 403 TLS fingerprinting bypass
-const defaultCiphers = tls.getCiphers();
+const defaultCiphers = tls.DEFAULT_CIPHERS.split(':');
 const shuffledCiphers = [
-	defaultCiphers[59],
-	defaultCiphers[60],
-	defaultCiphers[58],
-	...defaultCiphers.slice(-57),
-	...defaultCiphers.slice(61)
+	defaultCiphers[0],
+	// Swap the 2nd & 3rd ciphers:
+	defaultCiphers[2],
+	defaultCiphers[1],
+	...defaultCiphers.slice(3)
 ].join(':');
 
-console.log(shuffledCiphers)
+const agent = new https.Agent({ ciphers: shuffledCiphers });
+
 
 export class API {
 
@@ -70,13 +73,11 @@ export class API {
 				response_type: 'token id_token',
 				scope: 'account openid'
 			},
-			ciphers: shuffledCiphers
+			httpsAgent: agent,
 
 		};
 
-		return  axios.post('https://auth.riotgames.com/api/v1/authorization', data).then(() => {
-
-
+		return await axios(data).then(() => {
 
 			return axios.put('https://auth.riotgames.com/api/v1/authorization', {
 
