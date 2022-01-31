@@ -1,12 +1,12 @@
 import axios from 'axios';
-import { wrapper } from 'axios-cookiejar-support';
+// import { wrapper } from 'axios-cookiejar-support';
 import { CookieJar } from 'tough-cookie';
 import {regions} from "./regions.js";
-import tls from 'tls';
-import https from "https";
+import url from 'url';
+import { HttpCookieAgent, HttpsCookieAgent } from 'http-cookie-agent';
 
 
-wrapper(axios);
+// wrapper(axios);
 
 
 // Riot Auth Urls
@@ -15,19 +15,48 @@ const entitleUrl = "https://entitlements.auth.riotgames.com/api/token/v1";
 const userInfoUrl = "https://auth.riotgames.com/userinfo";
 const regionUrl = "https://riot-geo.pas.si.riotgames.com/pas/v1/product/valorant";
 const gameEntitlementUrl = "https://clientconfig.rpg.riotgames.com/api/v1/config/player";*/
-// const cookieJson = "{\"client_id\":
 
-// Error 403 TLS fingerprinting bypass
-const defaultCiphers = tls.DEFAULT_CIPHERS.split(':');
-const shuffledCiphers = [
-	defaultCiphers[0],
-	// Swap the 2nd & 3rd ciphers:
-	defaultCiphers[2],
-	defaultCiphers[1],
-	...defaultCiphers.slice(3)
+const ciphers = [
+	"TLS_AES_128_GCM_SHA256",
+	"TLS_AES_256_GCM_SHA384",
+	"TLS_CHACHA20_POLY1305_SHA256",
+	"TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+	"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+	"TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+	"TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+	"TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
+	"TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+	"TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+	"TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+	"TLS_RSA_WITH_AES_128_GCM_SHA256",
+	"TLS_RSA_WITH_AES_256_GCM_SHA384",
+	"TLS_RSA_WITH_AES_128_CBC_SHA",
+	"TLS_RSA_WITH_AES_256_CBC_SHA"
 ].join(':');
 
-const agent = new https.Agent({ ciphers: shuffledCiphers });
+
+// Setup CookieJar
+const jar = new CookieJar();
+
+// Bypass for 403, add ciphers to agent.
+axios.defaults.httpAgent = new HttpCookieAgent({
+	keepAlive: true,
+	rejectUnauthorized: false,
+	jar,
+	ciphers: ciphers,
+});
+axios.defaults.httpsAgent = new HttpsCookieAgent({
+	keepAlive: true,
+	rejectUnauthorized: false,
+	jar,
+	ciphers: ciphers,
+});
+axios.defaults.headers.common = {
+	'User-Agent': 'RiotClient/43.0.1.4195386.4190634 rso-auth (Windows;10;;Professional, x64)',
+	Accept: '*/*',
+};
+
+
 
 
 export class API {
@@ -51,9 +80,6 @@ export class API {
 
 	async authorize(username, password) {
 
-		// Setup CookieJar
-		const jar = new CookieJar();
-
 		let data = {
 
 			method: 'POST',
@@ -73,13 +99,12 @@ export class API {
 				response_type: 'token id_token',
 				scope: 'account openid'
 			},
-			httpsAgent: agent,
 
 		};
 
-		return await axios(data).then(() => {
+		return await axios(data).then(async () => {
 
-			return axios.put('https://auth.riotgames.com/api/v1/authorization', {
+			return await axios.put('https://auth.riotgames.com/api/v1/authorization', {
 
 				"type": "auth",
 				"username": username,
@@ -88,7 +113,6 @@ export class API {
 			}, {
 				jar: jar,
 				withCredentials: true,
-
 			}).then((response) => {
 
 				// Check for any errors
@@ -99,18 +123,18 @@ export class API {
 				}
 
 				// Parse the url
-				let parsedUrl = URL.parse(response.data.response.parameters.uri);
+				let parsedUrl = url.parse(response.data.response.parameters.uri);
 
 				let hash = parsedUrl.hash.replace("#", "");
 
-				let parts = URLSearchParams.parse(hash);
+				let parts = new URLSearchParams(hash);
 
-				return parts.access_token
+				return parts.get('access_token');
 
 			});
-		}).then((access_token) => {
+		}).then(async (access_token) => {
 
-			return axios.post('https://entitlements.auth.riotgames.com/api/token/v1',{},{
+			return await axios.post('https://entitlements.auth.riotgames.com/api/token/v1', {}, {
 
 				jar: jar,
 				withCredentials: true,
@@ -128,20 +152,30 @@ export class API {
 
 			});
 
-		}).then(() => {
+		}).then( async() => {
 
-			return axios.post('https://auth.riotgames.com/userinfo',{},{
+			data = {
 
-				jar: jar,
-				withCredentials: true,
+				method: 'GET',
+				url: 'https://auth.riotgames.com/userinfo',
 				headers: {
-
+					jar: jar,
+					withCredentials: true,
+					'Content-Type': 'application/json',
+					'User-Agent': 'RiotClient/43.0.1.4195386.4190634 rso-auth (Windows;10;;Professional, x64)',
 					'Authorization': `Bearer ${this.access_token}`,
+
+				},
+				data: {
+					client_id: 'play-valorant-web-prod',
+					nonce: '1',
 				},
 
-			}).then((response) => {
+			};
 
-				this.user_id = response.data.sub;
+			return await axios(data).then((response) => {
+
+				console.log("hooray");
 
 			});
 

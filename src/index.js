@@ -42,20 +42,20 @@ try {
 	}).catch((e) => {
 
 
-		if (e.response.status === 403) {
+		/*/if (e.response.status === 403) {
 
 			console.log(`${chalk.bgRed("F YOU RIOT GIVING ME 403 ERROR  GOD DAMINT")}`);
 			console.log(`${chalk.bgBlueBright("this probably means either api key is wrong or riot is fucking with me :)")}`);
 			console.log("Data: " + e.response.data);
 			console.log("Status: " + e.response.status);
 			console.log("Headers: ");
-			console.log(e.response.headers);
+			console.log(e.response.request);
 
-		} else {
+		} else {*/
 
 			console.log(e);
 
-		}
+
 
 	});
 
