@@ -40,13 +40,10 @@ const agents = {
   httpAgent,
   httpsAgent,
 }
-
 axios.defaults.headers.common = {
 	'User-Agent': 'RiotClient/43.0.1.4195386.4190634 rso-auth (Windows;10;;Professional, x64)',
 	Accept: '*/*',
 };
-
-
 
 
 export class API {
@@ -74,7 +71,7 @@ export class API {
 
 			method: 'POST',
 			url: 'https://auth.riotgames.com/api/v1/authorization',
-      ...agents,
+      		...agents,
 			headers: {
 				//jar: jar,
 				withCredentials: true,
@@ -95,14 +92,12 @@ export class API {
 		return await axios(data).then(async () => {
 
 			return await axios.put('https://auth.riotgames.com/api/v1/authorization', {
-
 				"type": "auth",
 				"username": username,
 				"password": password,
-
 			}, {
-        ...agents,
-        //jar: jar,
+        		...agents,
+				//jar: jar,
 				withCredentials: true,
 			}).then((response) => {
 
@@ -115,7 +110,7 @@ export class API {
 
 				// Parse the url
 				// DEPRECATED   let parsedUrl = url.parse(response.data.response.parameters.uri)
-        let parsedUrl = new URL(response.data.response.parameters.uri)
+				let parsedUrl = new URL(response.data.response.parameters.uri)
 
 				let hash = parsedUrl.hash.replace("#", "");
 
@@ -124,16 +119,18 @@ export class API {
 				return parts.get('access_token');
 
 			});
+
 		}).then(async (access_token) => {
 
 			return await axios.post('https://entitlements.auth.riotgames.com/api/token/v1', {}, {
-        ...agents,
+
+        		...agents,
 				//jar: jar,
 				withCredentials: true,
 				headers: {
 
-
 					'Authorization': `Bearer ${access_token}`,
+
 				},
 
 			}).then((response) => {
@@ -145,11 +142,8 @@ export class API {
 			});
 
 		}).then( async() => {
-			return await this.getPlayerInfo().then((response) => {
 
-				console.log("hooray");
-
-			});
+			return await this.getPlayerInfo();
 
 		});
 
@@ -159,45 +153,29 @@ export class API {
 
 		// Get Player PUUID
 
-    const data = {
-      method: "GET",
-      url: "https://auth.riotgames.com/userinfo",
-      headers: {
-        withCredentials: true,
-        "Content-Type": "application/json",
-        "User-Agent":
-          "RiotClient/43.0.1.4195386.4190634 rso-auth (Windows;10;;Professional, x64)",
-        Authorization: `Bearer ${this.access_token}`,
-      },
-      data: {
-        client_id: "play-valorant-web-prod",
-        nonce: "1",
-      },
-    }
-
-    return await axios(data).then((resp) => {
-      this.user_id = resp.data.sub
-      return resp.data
-    })
-
-		/* Logic here gave bad request still
-    axios.get("https://auth.riotgames.com/userinfo", {}, {
-
+		const data = {
+		  method: "GET",
+		  url: "https://auth.riotgames.com/userinfo",
+		  headers: {
 			withCredentials: true,
-			headers: {
+			"Content-Type": "application/json",
+			"User-Agent":
+			  "RiotClient/43.0.1.4195386.4190634 rso-auth (Windows;10;;Professional, x64)",
+			Authorization: `Bearer ${this.access_token}`,
+		  },
+		  data: {
+			client_id: "play-valorant-web-prod",
+			nonce: "1",
+		  },
+		};
 
-				'Authorization': `Bearer ${this.access_token}`,
-			},
+		return await axios(data).then((resp) => {
 
-		}).then((resp) => {
+			this.user_id = resp.data.sub;
+			return resp.data;
 
-			this.user_id = resp;
-			console.log("UserID: " + resp);
+		});
 
-		}).catch(function (error) {
-
-			console.error(error);
-
-		}); */
 	}
+
 }

@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
+    "start": "node .",
     "test": "jest"
   },
   "keywords": [
