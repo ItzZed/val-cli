@@ -1,0 +1,10 @@
+{
+	"User": {
+
+		"username": "username",
+		"password": "password",
+		"puuid": ""
+
+	},
+	"FirstRun": true
+}
