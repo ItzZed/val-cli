@@ -1,35 +1,40 @@
-// CURRENTLY NOT WORKING, ILL FIX ONCE I GET CLI WORKING
-
-import config from "config";
+// LIGHTWEIGHT CONFIGURATION MANAGER
+// Made by ItzZed, meant for val-cli. // Config names and path names are hard coded in.
+// Using fs for writing and saving files
+import dotenv from "dotenv";
 import inquirer from "inquirer";
-import {API} from "../api/API.js";
 
-const api = new API();
 
-const cUsername = config.get("User.username");
-const cPassword = config.get("User.password");
-const cPUUID = config.get("User.puuid");
-const cFirstRun = config.get("FirstRun");
+dotenv.config("././.env");
+
 
 export class ConfigManager {
 
-	// FirstTime Setup
-	static async Setup() {
+	static constructor() {
 
-		cUsername.set(this.getUsername());
-		cPassword.set(this.getPassword());
-		cPUUID.set(this.getPUUID());
-		cFirstRun.set(false);
+		this.username = process.env.VCLI_USERNAME;
+		this.password = process.env.VCLI_PASSWORD;
+		this.puuid = process.env.VCLI_PUUID;
 
 	}
 
-	static async getUsername() {
+	// SETUP ASK FOR USERNAME AND PASSWORD
+	static async Setup() {
 
-		let username = null;
+
+		await this.askForUsername();
+		await this.askForPassword();
+
+	}
+
+	// Ask for username and password
+	static async askForUsername() {
+
+		let u = null;
 
 		do {
 
-			const gUsername = await inquirer.prompt({
+			const aUsername = await inquirer.prompt({
 				name: "username",
 				type: "input",
 				message: "What Is Your Username?",
@@ -38,64 +43,75 @@ export class ConfigManager {
 				},
 			});
 
-			username = gUsername.username;
+			u = aUsername.username;
 
 
-		} while(username == null);
+		} while (u == null);
 
-		return username;
-
+		this.setUsername(u);
 
 	}
+	static async askForPassword() {
 
-	static async getPassword() {
-
-		let password = null;
+		let p = null;
 
 		do {
 
-			const gPassword = await inquirer.prompt({
+			const aPassword = await inquirer.prompt({
 				name: "password",
-				type: "input",
+				type: "password",
 				message: "What Is Your Password?",
+				mask: "*",
 				default() {
 					return null;
 				},
 			});
 
-			password = gPassword.password;
+			p = aPassword.password;
 
 
-		} while(password == null);
+		} while (p == null);
 
-		return password;
-
-
-	}
-
-	static async getPUUID() {
-
-		try {
-
-			api.authorize(cUsername, cPassword).then(() => {
-
-				return api.user_id;
-
-			});
-
-		}
-		catch (e) {
-
-			console.log("CONFIGMANAGER ERROR: getPUUID()");
-			console.log(e);
-
-		}
+		this.setPassword(p);
 
 	}
 
-	static IsConfigured() {
 
-		return !cFirstRun;
+
+	// GETTERS
+	static getUsername() {
+
+		return this.username;
+
+	}
+	static getPassword() {
+
+		return this.password;
+
+	}
+	static getPUUID() {
+
+		return this.puuid;
+
+	}
+
+	// SETTERS
+	static setUsername(user) {
+
+		process.env.VCLI_USERNAME = user;
+		this.username = user;
+
+	}
+	static setPassword(pass) {
+
+		process.env.VCLI_PASSWORD = pass;
+		this.password = pass;
+
+	}
+	static setPUUID(pid) {
+
+		process.env.VCLI_PUUID = pid;
+		this.puuid = pid;
 
 	}
 

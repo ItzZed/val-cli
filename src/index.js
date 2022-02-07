@@ -2,24 +2,20 @@
 
 // Imports
 import chalk from "chalk";
-// import gradient from "gradient-string";
 import Table from "cli-table";
 import { createSpinner } from "nanospinner"
+import dotenv from "dotenv";
 
-/*import inquirer from "inquirer";
-import chalkAnimation from "chalk-animation";
-import figlet from "figlet";*/
 // Import API
-import {API} from "./api/api.js";
+import { API } from "./api/api.js";
+import { ConfigManager } from "./utils/ConfigManager.js";
 
-// import { ConfigManager } from "./utils/ConfigManager.js";
 
-// Api KEY HERE
-// const key = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
-// start the api up
-// const api = new API(key);
 const api = new API();
+dotenv.config("./.env");
+const conf = new ConfigManager();
+
 
 // const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
 
@@ -36,15 +32,21 @@ let table = new Table({
 
 // const spinner = createSpinner('Loading...').start();
 
+const startup = async () => {
+
+	await conf.constructor.Setup();
+
+};
+
 const main = async () => {
 
 	try {
 
-
-		api.authorize("", "").then(async () => {
+		api.authorize(process.env.VCLI_USERNAME, process.env.VCLI_PASSWORD).then(async () => {
 
 			let ign, tag, lvl, rank, rr, prank; // have not implemented peak rank yet and level
 
+			process.env.VCLI_PUUID = api.user_id;
 
 			// log auth data
 			/*console.log({
@@ -104,4 +106,5 @@ const main = async () => {
 
 };
 
+await startup();
 await main();
