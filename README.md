@@ -34,5 +34,5 @@ npm start
 ## TODO'S
 
 - [ ]  Get Functional CLI
-    - [ ]  Show Valorant Rank + MMR
+    - [x]  Show Valorant Rank + MMR
     - [ ]  Show Stats (i.e K/D/A, and Winrate %)
