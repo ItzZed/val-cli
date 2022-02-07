@@ -13,11 +13,9 @@ import { ConfigManager } from "./utils/ConfigManager.js";
 
 
 const api = new API();
-dotenv.config("./.env");
+dotenv.config({path: "./.env"});
 const conf = new ConfigManager();
-
-
-// const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
+const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
 
 
 let table = new Table({
@@ -27,10 +25,6 @@ let table = new Table({
 		, 'right': '║' , 'right-mid': '╢' , 'middle': '│' },
 });
 
-
-// console.log(`${chalk.bgBlueBright("Welcome to VAL-CLI!")} The Most Broken CLI EVER LOL!`);
-
-// const spinner = createSpinner('Loading...').start();
 
 const startup = async () => {
 
@@ -88,12 +82,12 @@ const main = async () => {
 
 			// await sleep();
 
-			// spinner.success({text: "Val-Cli Results: "});
+			spinner.success({text: "Loaded!"});
 			console.log(tableString);
 
 
 		}).catch((e) => {
-			// spinner.error({text: "Error Occurred!"});
+			spinner.error({text: "Error Occurred!"});
 			console.log(e);
 
 		});
@@ -107,4 +101,6 @@ const main = async () => {
 };
 
 await startup();
+await sleep();
+const spinner = createSpinner('Loading...').start();
 await main();

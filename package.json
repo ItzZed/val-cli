@@ -9,16 +9,23 @@
 	"main": "src/index.js",
 	"type": "module",
 	"scripts": {
-		"start": "node .",
-		"test": "jest"
+		"start": "node ."
 	},
 	"bin": "src/index.js",
 	"keywords": [
-		"Valorant",
-		"API",
-		"MMR",
-		"CLI",
-		"Stats"
+		"valorant",
+		"api",
+		"mmr",
+		"cli",
+		"stats",
+		"riot",
+		"nodejs",
+		"js",
+		"competitive",
+		"history",
+		"match",
+		"games",
+		"val"
 	],
 	"author": "ItzZed",
 	"license": "ISC",
