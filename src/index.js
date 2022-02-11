@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 // Imports
+import fs from "fs";
 import chalk from "chalk";
 import Table from "cli-table";
 import { createSpinner } from "nanospinner"
@@ -9,15 +10,16 @@ import dotenv from "dotenv";
 // Import API
 import { API } from "./api/api.js";
 import { ConfigManager } from "./utils/ConfigManager.js";
+import {ArgumentHandler} from "./utils/ArgumentHandler.js";
 
-
-
+// Constants
 const api = new API();
 dotenv.config({path: "./.env"});
-const conf = new ConfigManager();
 const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
+const cPath = "./config.json";
 
-
+// Variables
+let args = process.argv
 let table = new Table({
 	chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
 		, 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
@@ -25,10 +27,56 @@ let table = new Table({
 		, 'right': '║' , 'right-mid': '╢' , 'middle': '│' },
 });
 
+// Functions
+const argHandler = async () => {
+
+	const argSetup = new ArgumentHandler(args);
+
+	let argToggles = argSetup.commandSettings();
+
+	if((await argToggles).setup === true) {
+
+		await setupModeToggleOn();
+
+	}
+
+};
 
 const startup = async () => {
 
-	await conf.constructor.Setup();
+	let jsonData;
+	// Check if first run or config file is empty.
+	try {
+
+		let data = fs.readFileSync(cPath, ({ encoding: "utf8" }));
+
+		jsonData = JSON.parse(data);
+
+		if (jsonData.setup === true) {
+
+			// Setup mode
+			await ConfigManager.Setup();
+
+			// SAVE PROCESS ENV STUFF TO CONFIG.JSON!
+
+			await saveToConfig();
+
+		} else {
+
+			ConfigManager.setUsername(jsonData.username);
+			ConfigManager.setPassword(jsonData.password);
+			ConfigManager.setPUUID(jsonData.puuid);
+
+		}
+
+	}
+	catch (e) {
+
+		console.log(e);
+
+	}
+
+
 
 };
 
@@ -41,6 +89,9 @@ const main = async () => {
 			let ign, tag, lvl, rank, rr, prank; // have not implemented peak rank yet and level
 
 			process.env.VCLI_PUUID = api.user_id;
+
+			// Save credentials (MAINLY PUUID) to config
+			await saveToConfig();
 
 			// log auth data
 			/*console.log({
@@ -100,7 +151,46 @@ const main = async () => {
 
 };
 
+const saveToConfig = async () => {
+
+	let data = {
+		username: process.env.VCLI_USERNAME,
+		password: process.env.VCLI_PASSWORD,
+		puuid: process.env.VCLI_PUUID,
+		setup: false
+	};
+
+	// Make data into json format. null is to get to space where it can be pretty printed via the random 4 below.
+	let jsonData = JSON.stringify(data, null, 4);
+
+	fs.writeFileSync(cPath, jsonData);
+
+}
+
+const setupModeToggleOn = async () => {
+
+	let data = {
+		username: "",
+		password: "",
+		puuid: "",
+		setup: true
+	};
+
+	// Make data into json format. null is to get to space where it can be pretty printed via the random 4 below.
+	let jsonData = JSON.stringify(data, null, 4);
+
+	fs.writeFileSync(cPath, jsonData);
+
+}
+
+// PROGRAM RUNS
+// Check For Args and Handle it
+await argHandler();
+// Startup is misleading, the program checks for args then runs startup.
 await startup();
+// Wait 2s
 await sleep();
+// Cool Spinner thing
 const spinner = createSpinner('Loading...').start();
+// Run the program! PogChamp
 await main();
