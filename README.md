@@ -26,7 +26,7 @@ npm install -g val-cli
 ```
 - Run in command line
 ```
-$# val-cli
+val-cli
 ```
 
 ### Manually
