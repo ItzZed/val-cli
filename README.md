@@ -11,15 +11,14 @@
 
 # Install
 
-----
 
 - Install [Node.js](https://nodejs.org/en/) (Project Made On Node.js version v16.13.2)
 
 ## Getting Started
 
----
 
-###Recommended
+
+### Recommended
 
 - Install via [npm](https://www.npmjs.com/package/val-cli)
 ```
@@ -30,7 +29,7 @@ npm install -g val-cli
 $# val-cli
 ```
 
-###Manually
+### Manually
 - Clone the repository
 ```
 git clone https://github.com/ItzZed/val-cli.git
@@ -57,6 +56,6 @@ val-cli
 - [ ] More Config Options
 - [ ] Refactor and remove deprecated stuff
 
-----
+
 
 This project is not complete and is extremely unstable, use at your own risk.
