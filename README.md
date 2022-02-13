@@ -1,5 +1,6 @@
 <div align="center">
-   <h1>val-cli</h1>
+   <img src="./val-cli-icon.svg" width="400"></a>
+
    <a href="https://www.npmjs.com/package/val-cli"><img src="https://badgen.net/npm/v/val-cli?color=red" alt="NPM-Version"/></a>
    <a href="https://www.npmjs.com/package/val-cli"><img src="https://badgen.net/npm/dt/val-cli?color=red" alt="NPM-Downloads"/></a>
    
@@ -47,6 +48,13 @@ Run the project
 val-cli
 ```
 
+## Known Bugs
+* On first open the program will not work and spam auth error + a config file not being found
+   * To circumvent this run ***val-cli --setup***
+* entering any config command besides --setup causes problems...
+* DOES NOT SUPPORT 2FA
+* Config file loading is just straight up jenky
+
 ## TODO'S
 
 - [ ]  Get Functional CLI
@@ -55,6 +63,7 @@ val-cli
    - [ ]  Finish "W.I.P" Stats
 - [ ] More Config Options
 - [ ] Refactor and remove deprecated stuff
+- [ ] Semi-Encrypt User Password Cuz Plaintext Aint Good...
 
 
 
