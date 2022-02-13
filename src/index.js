@@ -12,6 +12,12 @@ import { API } from "./api/api.js";
 import { ConfigManager } from "./utils/ConfigManager.js";
 import {ArgumentHandler} from "./utils/ArgumentHandler.js";
 
+// UPDATE NOTIFIER
+const updateNotifier = require('update-notifier');
+const pkg = require('../package.json');
+
+updateNotifier({pkg}).notify();
+
 // Constants
 const api = new API();
 dotenv.config({path: "./.env"});
@@ -47,6 +53,24 @@ const startup = async () => {
 	let jsonData;
 	// Check if first run or config file is empty.
 	try {
+
+		// Make a config file if not existing
+		if(!fs.existsSync(cPath)) {
+
+			let data = {
+				username: "",
+				password: "",
+				puuid: "",
+				setup: true
+			};
+
+			// Make data into json format. null is to get to space where it can be pretty printed via the random 4 below.
+			let jsonData = JSON.stringify(data, null, 4);
+
+			fs.writeFileSync(cPath, jsonData);
+
+		}
+
 
 		let data = fs.readFileSync(cPath, ({ encoding: "utf8" }));
 
