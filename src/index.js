@@ -13,8 +13,10 @@ import { ConfigManager } from "./utils/ConfigManager.js";
 import {ArgumentHandler} from "./utils/ArgumentHandler.js";
 
 // UPDATE NOTIFIER
-const updateNotifier = require('update-notifier');
-const pkg = require('../package.json');
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+import updateNotifier from "update-notifier";
+const pkg = require("../package.json");
 
 updateNotifier({pkg}).notify();
 
