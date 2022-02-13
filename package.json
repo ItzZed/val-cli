@@ -1,13 +1,12 @@
 {
-	"name": "val-cli",
+	"name": "@itzzed/val-cli",
 	"version": "1.1.0",
 	"description": "CLI that shows your valorant stats.",
 	"publishConfig": {
 		"@itzzed:registry": "https://npm.pkg.github.com"
 	},
 	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/ItzZed/val-cli.git"
+		"url": "git://github.com/ItzZed/val-cli.git"
 	},
 	"main": "src/index.js",
 	"type": "module",
