@@ -148,11 +148,92 @@ const main = async () => {
 
 			});
 
+			// CHANGE RANK COLOR,  If Diamond = Pink, Plat = Blue, etc
+			let rankColor = chalk.cyanBright(rank);
+			switch(rank) {
+				// Iron
+				case "Iron 1":
+					rankColor = chalk.gray(rank);
+					break;
+				case "Iron 2":
+					rankColor = chalk.gray(rank);
+					break;
+				case "Iron 3":
+					rankColor = chalk.gray(rank);
+					break;
+				// Bronze
+				case "Bronze 1":
+					rankColor = chalk.yellow(rank);
+					break;
+				case "Bronze 2":
+					rankColor = chalk.yellow(rank);
+					break;
+				case "Bronze 3":
+					rankColor = chalk.yellow(rank);
+					break;
+				// Silver
+				case "Silver 1":
+					rankColor = chalk.white(rank);
+					break;
+				case "Silver 2":
+					rankColor = chalk.white(rank);
+					break;
+				case "Silver 3":
+					rankColor = chalk.white(rank);
+					break;
+				// Gold
+				case "Gold 1":
+					rankColor = chalk.yellowBright(rank);
+					break;
+				case "Gold 2":
+					rankColor = chalk.yellowBright(rank);
+					break;
+				case "Gold 3":
+					rankColor = chalk.yellowBright(rank);
+					break;
+				// Platinum
+				case "Platinum 1":
+					rankColor = chalk.cyan(rank);
+					break;
+				case "Platinum 2":
+					rankColor = chalk.cyan(rank);
+					break;
+				case "Platinum 3":
+					rankColor = chalk.cyan(rank);
+					break;
+				// Diamond
+				case "Diamond 1":
+					rankColor = chalk.magenta(rank);
+					break;
+				case "Diamond 2":
+					rankColor = chalk.magenta(rank);
+					break;
+				case "Diamond 3":
+					rankColor = chalk.magenta(rank);
+					break;
+				// Immortal
+				case "Immortal 1":
+					rankColor = chalk.redBright(rank);
+					break;
+				case "Immortal 2":
+					rankColor = chalk.redBright(rank);
+					break;
+				case "Immortal 3":
+					rankColor = chalk.redBright(rank);
+					break;
+				// Radiant
+				case "Radiant":
+					rankColor = chalk.bgYellowBright(rank);
+					break;
+				default:
+					rankColor = chalk.gray(rank);
+			}
+
 
 			// Table Data
 			table.push(
 				[chalk.blueBright("Name"), chalk.blueBright("Level"), chalk.blueBright("Rank"), chalk.blueBright("RR"), chalk.blueBright("Peak Rank")],
-				[chalk.cyanBright(ign) + chalk.cyan("#" + tag), chalk.yellowBright("W.I.P"), chalk.cyanBright(rank), chalk.cyanBright(rr), chalk.yellowBright("W.I.P")],
+				[chalk.cyanBright(ign) + chalk.cyan("#" + tag), chalk.yellowBright("W.I.P"), rankColor, chalk.cyanBright(rr), chalk.yellowBright("W.I.P")],
 			);
 
 			let tableString = table.toString();
@@ -208,6 +289,9 @@ const setupModeToggleOn = async () => {
 	fs.writeFileSync(cPath, jsonData);
 
 }
+
+// console.log("LOCAL PACKAGE: version is " + pkg.version);
+
 
 // PROGRAM RUNS
 // Check For Args and Handle it
