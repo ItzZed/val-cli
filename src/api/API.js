@@ -1,15 +1,11 @@
 "use strict";
 
 import axios from 'axios';
-// import { wrapper } from 'axios-cookiejar-support';
 import { CookieJar } from 'tough-cookie';
-import {regions} from "./regions.js";
+import { regions } from "./regions.js";
 import { HttpCookieAgent, HttpsCookieAgent } from 'http-cookie-agent';
 import { ciphers } from "./ciphers.js";
-import {Tiers} from "./tiers.js";
-
-// wrapper(axios);
-
+import { Tiers } from "./tiers.js";
 
 // Riot Auth Urls
 /*const authUrl = "https://auth.riotgames.com/api/v1/authorization";
@@ -17,10 +13,6 @@ const entitleUrl = "https://entitlements.auth.riotgames.com/api/token/v1";
 const userInfoUrl = "https://auth.riotgames.com/userinfo";
 const regionUrl = "https://riot-geo.pas.si.riotgames.com/pas/v1/product/valorant";
 const gameEntitlementUrl = "https://clientconfig.rpg.riotgames.com/api/v1/config/player";*/
-
-// not posting ciphers sorry fam.
-
-
 
 // Setup CookieJar
 const jar = new CookieJar();
@@ -57,7 +49,7 @@ export class API {
 		this.user_id = null;
 		this.access_token = null;
 		this.entitlements_token = null;
-		this.client_version = 'release-04.08-15-701907';
+		this.client_version = "";
 		this.client_platform = {
 			"platformType": "PC",
 			"platformOS": "Windows",
@@ -67,7 +59,27 @@ export class API {
 
 	}
 
+	// Get the riot client version
+	async getRCVersion() {
+
+		const data = {
+			method: "GET",
+			url: `https://valorant-api.com/v1/version`,
+		};
+
+		return await axios(data).then(async (resp) => {
+
+			return await resp.data.data.riotClientVersion;
+
+		});
+
+	}
+
+
 	async authorize(username, password) {
+
+		// Get the Riot Client Version First
+		this.client_version =  await this.getRCVersion();
 
 		let data = {
 

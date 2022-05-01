@@ -49,11 +49,14 @@ val-cli
 ```
 
 ## Known Bugs
+
 * On first open the program will not work and spam auth error + a config file not being found
    * To circumvent this run ***val-cli --setup***
 * entering any config command besides --setup causes problems...
 * DOES NOT SUPPORT 2FA
 * Config file loading is just straight up jenky
+
+If you find any bugs that are not on the list please send me a discord message!
 
 ## TODO'S
 
@@ -68,3 +71,7 @@ val-cli
 
 
 This project is not complete and is extremely unstable, use at your own risk.
+
+## Contact Me
+If you discover a bug or would like to help out/contribute in any way feel free to send me a dm! 
+Discord: ItzZed#0001
