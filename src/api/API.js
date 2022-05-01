@@ -57,7 +57,7 @@ export class API {
 		this.user_id = null;
 		this.access_token = null;
 		this.entitlements_token = null;
-		this.client_version = 'release-04.08-shipping-15-701907';
+		this.client_version = 'release-04.08-15-701907';
 		this.client_platform = {
 			"platformType": "PC",
 			"platformOS": "Windows",
