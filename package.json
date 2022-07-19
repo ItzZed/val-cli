@@ -39,7 +39,7 @@
 		"chalk": "^5.0.0",
 		"cli-table": "^0.3.11",
 		"dotenv": "^16.0.0",
-		"http-cookie-agent": "^1.0.4",
+		"http-cookie-agent": "^1.0.6",
 		"inquirer": "^8.2.0",
 		"nanospinner": "^1.0.0",
 		"tough-cookie": "^4.0.0",
