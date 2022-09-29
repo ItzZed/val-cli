@@ -43,7 +43,7 @@
 		"inquirer": "^8.2.0",
 		"nanospinner": "^1.0.0",
 		"tough-cookie": "^4.0.0",
-		"update-notifier": "^5.1.0",
+		"update-notifier": "^6.0.0",
 		"url": "^0.11.0"
 	}
 }
